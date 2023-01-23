@@ -1,5 +1,5 @@
 .idea
-.iml
+*.iml
 
 # Default ignored files
 /shelf/
