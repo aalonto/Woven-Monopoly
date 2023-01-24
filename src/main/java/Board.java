@@ -2,6 +2,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import utils.Utils;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -19,27 +20,13 @@ public class Board {
     }
 
     private void initialiseBoardItems() {
-        BoardItem go = new BoardItem("GO", null, "go", 0);
+        BoardItem go = new BoardItem("GO", "N/A", "go", 0);
         items.add(go);
-        JSONParser jsonParser = new JSONParser();
-
-        try (FileReader reader = new FileReader("data/board.json"))
-        {
-            //Read JSON file
-            Object obj = jsonParser.parse(reader);
-
-            JSONArray itemsList = (JSONArray) obj;
-
-            //Iterate over employee array
-            itemsList.forEach( item -> parseItemObject( (JSONObject) item ) );
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        JSONArray itemsList = Utils.readJSONFile("data/board.json");
+        if (itemsList != null){
+            itemsList.forEach( item -> parseItemObject( (JSONObject) item ));
         }
+
     }
 
     private void parseItemObject(JSONObject item)
