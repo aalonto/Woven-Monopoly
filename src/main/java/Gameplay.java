@@ -47,6 +47,36 @@ public class Gameplay {
                 }
             }
         }
+
+        displayResults();
+    }
+
+    private void displayResults() {
+        Player winner = players.get(0);
+
+        System.out.println("________________________________________________________________");
+        System.out.println("****************************Game Results************************");
+        System.out.println("________________________________________________________________");
+
+
+        for (Player player : players) {
+            if(player.getMoney() > winner.getMoney()) {
+                winner = player;
+            }
+
+            System.out.printf("%-16s%-20s\n", "Player:", player.getName() );
+            System.out.printf("%-16s%-20s\n", "End Position:", board.getBoardItem(player.getPosition()).getName());
+            System.out.printf("%-16s%-20s\n", "Cash Amount:", "$" + player.getMoney());
+            System.out.printf("%-16s%-20s\n", "Total Properties Owned: ", player.getProperties().size());
+
+            for (BoardItem item : player.getProperties()) {
+                System.out.printf("%16s%10s\n", "Property: ",  item.getName());
+                System.out.printf("%16s%-20s\n", "Colour: ", item.getColour());
+            }
+            System.out.println("_________________________________");
+
+        }
+        System.out.printf("\n%-16s%-20s\n", "WINNER: ", winner.getName());
     }
 
     public int rollDice() {
@@ -82,7 +112,7 @@ public class Gameplay {
                 if(player.getMoney() >= boardItem.getPrice()) {
                     player.payAmount(boardItem.getPrice());
                     boardItem.setOwner(player);
-                    player.addProperty(boardItem.getName());
+                    player.addProperty(boardItem);
                     System.out.println(player.getName() + " bought " + boardItem.getName() + ".");
                 }
             } else if (boardItem.getOwner().equals(player)) {
@@ -94,7 +124,7 @@ public class Gameplay {
                 }
                 player.payAmount(amountToPay);
                 boardItem.getOwner().receiveAmount(amountToPay);
-                System.out.println(player.getName() + " paid $" + amountToPay + " to " + boardItem.getOwner().getName());
+                System.out.println(player.getName() + " paid $" + amountToPay + " to " + boardItem.getOwner().getName() + ".");
             }
         }
     }

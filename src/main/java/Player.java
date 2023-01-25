@@ -4,7 +4,7 @@ import java.util.List;
 public class Player {
     private String name;
     private int position;
-    private List<String> properties;
+    private List<BoardItem> properties;
     private int money;
     private int numTurns;
 
@@ -12,11 +12,11 @@ public class Player {
         this.name = name;
         this.position = 0;
         this.money = 16;
-        this.properties = new ArrayList<String>();
+        this.properties = new ArrayList<BoardItem>();
         this.numTurns = 0;
     }
 
-    public void addProperty(String property) {
+    public void addProperty(BoardItem property) {
         properties.add(property);
     }
 
@@ -48,12 +48,8 @@ public class Player {
         this.position = position;
     }
 
-    public List<String> getProperties() {
+    public List<BoardItem> getProperties() {
         return properties;
-    }
-
-    public void setProperties(List<String> properties) {
-        this.properties = properties;
     }
 
     public int getMoney() {
