@@ -41,4 +41,8 @@ public class Board {
     public int getBoardSize() {
         return items.size();
     }
+
+    public BoardItem getBoardItem(int index) {
+        return items.get(index);
+    }
 }

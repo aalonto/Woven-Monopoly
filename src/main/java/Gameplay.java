@@ -37,24 +37,42 @@ public class Gameplay {
     private void playGame() {
         while(!loserExists) {
             for(Player player : players) {
-                int move = rolls_1.get(rollsIndices[0]) + rolls_2.get(rollsIndices[1]);
-                updateRollsIndex();
-                movePlayer(player);
-
-                if (player.getNumTurns() != 0 && player.getPosition() == 0) {
-                    player.addMoney(1);
-                }
-
+                int steps = rollDice();
+                movePlayer(player, steps);
                 player.addNumTurns();
                 if (player.isPlayerBankrupt()) loserExists = true;
             }
         }
     }
 
-    private void movePlayer(Player player) {
-        
+    public int rollDice() {
+        int steps = rolls_1.get(rollsIndices[0]) + rolls_2.get(rollsIndices[1]);
+        updateRollsIndex();
+        return steps;
 
     }
+
+    public void movePlayer(Player player, int steps) {
+        int  currentPosition = player.getPosition() + steps;
+        player.setPosition(currentPosition % board.getBoardSize());
+        checkBoardItem(player);
+
+    }
+
+    private void checkBoardItem(Player player) {
+        BoardItem boardItem = board.getBoardItem(player.getPosition());
+        String itemType = boardItem.getType();
+        if(itemType == "property") {
+
+        } else if (itemType == "go") {
+            if(player.getPosition() == 0) {
+                player.addMoney(1);
+            }
+
+        }
+        System.out.println("Player " + player.getName() + " moved to " + boardItem.getName());
+    }
+
 
     private void loadRolls() {
         JSONArray rollsList;
@@ -86,8 +104,6 @@ public class Gameplay {
           if(rollsIndices[i] >= rollsList[i].size()) {
               rollsIndices[i] = 0;
           }
-          System.out.println(rollsIndices[i]);
       }
-
     }
 }

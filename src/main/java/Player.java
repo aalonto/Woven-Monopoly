@@ -44,7 +44,7 @@ public class Player {
         return this.position;
     }
 
-    public void getPosition(int position) {
+    public void setPosition(int position) {
         this.position = position;
     }
 
@@ -67,8 +67,5 @@ public class Player {
     public int getNumTurns() {
         return this.numTurns;
     }
-
-
-
 
 }
