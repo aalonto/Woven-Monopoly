@@ -1,18 +1,13 @@
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import utils.Utils;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import utils.Utils;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 public class Board {
-    List<BoardItem> items;
+    private List<BoardItem> items;
 
     public Board() {
         this.items = new LinkedList<BoardItem>();
@@ -41,5 +36,9 @@ public class Board {
             items.add(i);
 
         }
+    }
+
+    public int getBoardSize() {
+        return items.size();
     }
 }
