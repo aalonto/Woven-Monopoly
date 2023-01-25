@@ -16,11 +16,11 @@ public class Player {
         this.numTurns = 0;
     }
 
-    public void addMoney(int money) {
+    public void receiveAmount(int money) {
         this.money += money;
     }
 
-    public void subtractMoney(int money) {
+    public void payAmount(int money) {
         this.money -= money;
     }
 
@@ -34,10 +34,6 @@ public class Player {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getPosition() {
@@ -58,10 +54,6 @@ public class Player {
 
     public int getMoney() {
         return this.money;
-    }
-
-    public void setMoney(int money) {
-        this.money = money;
     }
 
     public int getNumTurns() {

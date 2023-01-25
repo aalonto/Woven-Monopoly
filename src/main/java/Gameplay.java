@@ -40,7 +40,11 @@ public class Gameplay {
                 int steps = rollDice();
                 movePlayer(player, steps);
                 player.addNumTurns();
-                if (player.isPlayerBankrupt()) loserExists = true;
+                if (player.isPlayerBankrupt()) {
+                    System.out.println(player.getName() + " lost the game.");
+                    loserExists = true;
+                    break;
+                }
             }
         }
     }
@@ -61,16 +65,29 @@ public class Gameplay {
 
     private void checkBoardItem(Player player) {
         BoardItem boardItem = board.getBoardItem(player.getPosition());
+        System.out.println(player.getName() + " moved to " + boardItem.getName());
         String itemType = boardItem.getType();
-        if(itemType == "property") {
-
-        } else if (itemType == "go") {
+        if(itemType.equals("property")) {
+            if(boardItem.getOwner() == null){
+                if(player.getMoney() >= boardItem.getPrice()) {
+                    player.payAmount(boardItem.getPrice());
+                    boardItem.setOwner(player);
+                    //TODO add property to list on player
+                    System.out.println(player.getName() + " bought " + boardItem.getName());
+                }
+            } else if (boardItem.getOwner().equals(player)) {
+                return;
+            } else {
+                player.payAmount(boardItem.getPrice());
+                boardItem.getOwner().receiveAmount(boardItem.getPrice());
+                System.out.println(player.getName() + " paid $" + boardItem.getPrice() + " to " + boardItem.getOwner().getName());
+            }
+        } else if (itemType.equals("go")) {
             if(player.getPosition() == 0) {
-                player.addMoney(1);
+                player.receiveAmount(1);
             }
 
         }
-        System.out.println("Player " + player.getName() + " moved to " + boardItem.getName());
     }
 
 
@@ -94,6 +111,7 @@ public class Gameplay {
     private void loadPlayers(String[] playerNames) {
         for (String name : playerNames) {
             players.add(new Player(name));
+            System.out.println(name + " has joined the game.");
         }
 
     }
