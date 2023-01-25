@@ -16,6 +16,10 @@ public class Player {
         this.numTurns = 0;
     }
 
+    public void addProperty(String property) {
+        properties.add(property);
+    }
+
     public void receiveAmount(int money) {
         this.money += money;
     }

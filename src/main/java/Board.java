@@ -2,6 +2,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import utils.Utils;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -38,11 +40,30 @@ public class Board {
         }
     }
 
+
     public int getBoardSize() {
         return items.size();
     }
 
     public BoardItem getBoardItem(int index) {
         return items.get(index);
+    }
+
+    public boolean isPropertySetOwnedByOneOwner(BoardItem boardItem) {
+        boolean propertySetOwned = true;
+        List<BoardItem> propertySet = new ArrayList<BoardItem>();
+
+        for(BoardItem item : items) {
+            if(item.getColour().equals(boardItem.getColour())) {
+                if(item.getOwner() != null) {
+                    if(!item.getOwner().equals(boardItem.getOwner())) {
+                        propertySetOwned = false;
+                    }
+                } else {
+                    propertySetOwned = false;
+                }
+            }
+        }
+        return propertySetOwned;
     }
 }

@@ -57,39 +57,47 @@ public class Gameplay {
     }
 
     public void movePlayer(Player player, int steps) {
-        int  currentPosition = player.getPosition() + steps;
-        player.setPosition(currentPosition % board.getBoardSize());
+        System.out.println(player.getName() + " is moving " + steps + " steps.");
+        int tempPosition = player.getPosition() + steps;
+        final int boardSize = board.getBoardSize();
+        for(int i = 0, j = player.getPosition();  i <= steps; i++, j++) {
+            if(j >= boardSize) {
+                j = 0;
+                System.out.println(player.getName() + " passed GO and received $1.");
+            }
+            if (i == steps) {
+                player.setPosition(j);
+            }
+        }
         checkBoardItem(player);
 
     }
 
     private void checkBoardItem(Player player) {
         BoardItem boardItem = board.getBoardItem(player.getPosition());
-        System.out.println(player.getName() + " moved to " + boardItem.getName());
+        System.out.println(player.getName() + " landed in " + boardItem.getName() + ".");
         String itemType = boardItem.getType();
         if(itemType.equals("property")) {
             if(boardItem.getOwner() == null){
                 if(player.getMoney() >= boardItem.getPrice()) {
                     player.payAmount(boardItem.getPrice());
                     boardItem.setOwner(player);
-                    //TODO add property to list on player
-                    System.out.println(player.getName() + " bought " + boardItem.getName());
+                    player.addProperty(boardItem.getName());
+                    System.out.println(player.getName() + " bought " + boardItem.getName() + ".");
                 }
             } else if (boardItem.getOwner().equals(player)) {
                 return;
             } else {
-                player.payAmount(boardItem.getPrice());
-                boardItem.getOwner().receiveAmount(boardItem.getPrice());
-                System.out.println(player.getName() + " paid $" + boardItem.getPrice() + " to " + boardItem.getOwner().getName());
+                int amountToPay = boardItem.getPrice();
+                if(board.isPropertySetOwnedByOneOwner(boardItem)) {
+                    amountToPay *= 2;
+                }
+                player.payAmount(amountToPay);
+                boardItem.getOwner().receiveAmount(amountToPay);
+                System.out.println(player.getName() + " paid $" + amountToPay + " to " + boardItem.getOwner().getName());
             }
-        } else if (itemType.equals("go")) {
-            if(player.getPosition() == 0) {
-                player.receiveAmount(1);
-            }
-
         }
     }
-
 
     private void loadRolls() {
         JSONArray rollsList;
