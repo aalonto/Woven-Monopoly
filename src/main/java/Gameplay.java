@@ -1,9 +1,7 @@
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,8 +28,9 @@ public class Gameplay {
 
     protected void startGame() {
         loadRolls();
-        loadPlayers(PLAYER_NAMES);
+        loadPlayers();
         playGame();
+        displayResults();
     }
 
     private void playGame() {
@@ -39,7 +38,6 @@ public class Gameplay {
             for(Player player : players) {
                 int steps = rollDice();
                 movePlayer(player, steps);
-                player.addNumTurns();
                 if (player.isPlayerBankrupt()) {
                     System.out.println(player.getName() + " lost the game.");
                     loserExists = true;
@@ -47,8 +45,6 @@ public class Gameplay {
                 }
             }
         }
-
-        displayResults();
     }
 
     private void displayResults() {
@@ -146,8 +142,8 @@ public class Gameplay {
         }
     }
 
-    private void loadPlayers(String[] playerNames) {
-        for (String name : playerNames) {
+    public void loadPlayers() {
+        for (String name : PLAYER_NAMES) {
             players.add(new Player(name));
             System.out.println(name + " has joined the game.");
         }

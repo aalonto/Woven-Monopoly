@@ -40,7 +40,6 @@ public class Board {
         }
     }
 
-
     public int getBoardSize() {
         return items.size();
     }
@@ -49,9 +48,12 @@ public class Board {
         return items.get(index);
     }
 
+    public List<BoardItem> getItems() {
+        return items;
+    }
+
     public boolean isPropertySetOwnedByOneOwner(BoardItem boardItem) {
         boolean propertySetOwned = true;
-        List<BoardItem> propertySet = new ArrayList<BoardItem>();
 
         for(BoardItem item : items) {
             if(item.getColour().equals(boardItem.getColour())) {
