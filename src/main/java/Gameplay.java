@@ -8,9 +8,13 @@ import java.util.List;
 public class Gameplay {
     private Board board;
     private List<Player> players;
+    //List of rolls from rolls_1.json
     private List<Integer> rolls_1;
+    //List of rolls from rolls_2.json
     private List<Integer> rolls_2;
+    //contains the two dice rolls ArrayLists
     private List<Integer>[] rollsList;
+    //Indices of current roll used in both rolls
     private int[] rollsIndices = {0,0};
     private final String[] PLAYER_NAMES = {"Peter","Billy","Charlotte", "Sweedal"};
     private boolean loserExists;
@@ -27,7 +31,7 @@ public class Gameplay {
 
     }
 
-    protected void startGame() {
+    public void startGame() {
         displayIntro();
         loadRolls();
         loadPlayers();
@@ -36,6 +40,7 @@ public class Gameplay {
     }
 
     private void playGame() {
+        //while no one is bankrupt yet, continue player turns
         while(!loserExists) {
             for(Player player : players) {
                 int steps = rollDice();
@@ -51,9 +56,21 @@ public class Gameplay {
     }
 
     public int rollDice() {
+        //add first and second dice rolls based on dice rolls array
         int steps = rolls_1.get(rollsIndices[0]) + rolls_2.get(rollsIndices[1]);
         updateRollsIndex();
         return steps;
+    }
+
+    private void updateRollsIndex() {
+        //for both rolls array, add one to each
+        for (int i = 0; i < rollsIndices.length; i++) {
+            rollsIndices[i]++;
+            //go back to first index of dice rolls if last index is reached
+            if(rollsIndices[i] >= rollsList[i].size()) {
+                rollsIndices[i] = 0;
+            }
+        }
     }
 
     public void movePlayer(Player player, int steps) {
@@ -61,11 +78,15 @@ public class Gameplay {
         addDelay();
         final int boardSize = board.getBoardSize();
         for(int i = 0, j = player.getPosition();  i <= steps; i++, j++) {
+            //if index is greater or equal to board size, return to GO (first board item)
             if(j >= boardSize) {
                 j = 0;
+                //player receives $1 if GO is passed
+                player.receiveAmount(1);
                 System.out.println(player.getName() + " passed GO and received $1.");
             addDelay();
             }
+            //once loop reaches last step, set player's position to index of board item
             if (i == steps) {
                 player.setPosition(j);
             }
@@ -74,26 +95,31 @@ public class Gameplay {
     }
 
     private void checkBoardItem(Player player) {
+        //get board item player is currently in
         BoardItem boardItem = board.getBoardItem(player.getPosition());
         System.out.println(player.getName() + " landed in " + boardItem.getName() + ".");
         addDelay();
         String itemType = boardItem.getType();
         if(itemType.equals("property")) {
+            //if board item is null, player must buy property
             if(boardItem.getOwner() == null){
-                if(player.getMoney() >= boardItem.getPrice()) {
                     player.payAmount(boardItem.getPrice());
                     boardItem.setOwner(player);
+                    //add board item to player's list of owned properties
                     player.addProperty(boardItem);
                     System.out.println(player.getName() + " bought " + boardItem.getName() + ".");
                     addDelay();
-                }
             } else if (boardItem.getOwner().equals(player)) {
+                //do nothing if player landed on own property
                 return;
             } else {
+                //if board is not null and not owned by player, property is owned by another player
                 int amountToPay = boardItem.getPrice();
+                //rent doubled if property set owned by same player
                 if(board.isPropertySetOwnedByOneOwner(boardItem)) {
                     amountToPay *= 2;
                 }
+                //player pays amount to property owner
                 player.payAmount(amountToPay);
                 boardItem.getOwner().receiveAmount(amountToPay);
                 System.out.println(player.getName() + " paid $" + amountToPay + " to " + boardItem.getOwner().getName() + ".");
@@ -104,12 +130,14 @@ public class Gameplay {
 
     private void loadRolls() {
         JSONArray rollsList;
+        //for loop for 2 dice rolls array
         for(int i=1; i<3; i++) {
             rollsList = Utils.readJSONFile("data/rolls_" + i + ".json");
 
             if(rollsList != null) {
                 for (int j = 0; j < rollsList.size(); j++) {
                     if (i == 1) {
+                        //convert roll item to integer and add to list of rolls
                         rolls_1.add(Integer.parseInt(String.valueOf(rollsList.get(j))));
                     } else {
                         rolls_2.add(Integer.parseInt(String.valueOf(rollsList.get(j))));
@@ -121,19 +149,11 @@ public class Gameplay {
 
     public void loadPlayers() {
         for (String name : PLAYER_NAMES) {
+            //create player
             players.add(new Player(name));
             System.out.println(name + " has joined the game.");
             addDelay();
         }
-    }
-
-    private void updateRollsIndex() {
-      for (int i = 0; i < rollsIndices.length; i++) {
-          rollsIndices[i]++;
-          if(rollsIndices[i] >= rollsList[i].size()) {
-              rollsIndices[i] = 0;
-          }
-      }
     }
 
     private void displayResults() {
@@ -168,8 +188,6 @@ public class Gameplay {
         System.out.println("********************WELCOME TO WOVEN MONOPOLY*******************");
         System.out.println("________________________________________________________________");
         addDelay();
-
-
     }
 
     private void addDelay() {

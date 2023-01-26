@@ -15,7 +15,9 @@ public class Board {
         initialiseBoardItems();
     }
 
+    /**Add board items from JSON file to board class as LinkedList variable**/
     private void initialiseBoardItems() {
+        //Add GO square to board as first item
         BoardItem go = new BoardItem("GO", "N/A", "go", 0);
         items.add(go);
         JSONArray itemsList = Utils.readJSONFile("data/board.json");
@@ -24,9 +26,10 @@ public class Board {
         }
 
     }
-
+    //Parse item object by getting key-value pairs in board.json file
     private void parseItemObject(JSONObject item)
     {
+        //add properties if board item is not GO
         if(!Objects.equals((String) item.get("name"), "GO")) {
             String name = (String) item.get("name");
             String colour = (String) item.get("colour");
@@ -43,6 +46,7 @@ public class Board {
         return items.size();
     }
 
+    //get board item using index given
     public BoardItem getBoardItem(int index) {
         return items.get(index);
     }
@@ -51,16 +55,21 @@ public class Board {
         return items;
     }
 
+    //Checks to see if colour property set is owned by a single owner
     public boolean isPropertySetOwnedByOneOwner(BoardItem boardItem) {
         boolean propertySetOwned = true;
 
         for(BoardItem item : items) {
+            //if colour of board item is equal to colour of board item given
             if(item.getColour().equals(boardItem.getColour())) {
                 if(item.getOwner() != null) {
+                    //if board item owner is not equal to owner of board item given,
+                    // property set is not owned by one owner
                     if(!item.getOwner().equals(boardItem.getOwner())) {
                         propertySetOwned = false;
                     }
                 } else {
+                    //if item is currently not owned
                     propertySetOwned = false;
                 }
             }

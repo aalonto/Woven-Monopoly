@@ -10,6 +10,7 @@ import java.io.IOException;
 
 public final class Utils {
 
+    //Helper method to read JSON files
     public static JSONArray readJSONFile(String fileName) {
         JSONArray array = new JSONArray();
         JSONParser jsonParser = new JSONParser();
