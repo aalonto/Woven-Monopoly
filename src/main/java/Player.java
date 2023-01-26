@@ -50,8 +50,4 @@ public class Player {
         return this.money;
     }
 
-    public int getNumTurns() {
-        return this.numTurns;
-    }
-
 }
